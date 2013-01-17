@@ -1,6 +1,6 @@
 <stack>
   <name>object_recognition_renderer</name>
-  <version>0.1.2</version>
+  <version>0.1.3</version>
   <description>Code that generates random views of an object</description>
   <author email="vrabaud@willowgarage.com">Vincent Rabaud</author>
   <maintainer email="vrabaud@willowgarage.com">Vincent Rabaud</maintainer>
@@ -9,6 +9,7 @@
 
   <url>http://ecto.willowgarage.com/recognition</url>
   <build_depends>assimp</build_depends>
+  <build_depends>boost</build_depends>
   <build_depends>catkin</build_depends>
   <build_depends>eigen</build_depends>
   <build_depends>freeimage</build_depends>
@@ -20,6 +21,7 @@
   <build_depends>sdl</build_depends>
 
   <depends>assimp</depends>
+  <depends>boost</depends>
   <depends>freeimage</depends>
   <depends>glut</depends>
   <depends>libosmesa6-dev</depends>
