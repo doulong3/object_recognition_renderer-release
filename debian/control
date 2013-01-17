@@ -1,0 +1,12 @@
+Source: ros-fuerte-object-recognition-renderer
+Section: misc
+Priority: extra
+Maintainer: Vincent Rabaud <vrabaud@willowgarage.com>
+Build-Depends: debhelper (>= 7.0.50~), ros-fuerte-catkin,libeigen3-dev,libfreeimage-dev,freeglut3-dev,libdevil-dev,ros-fuerte-opencv2,libassimp-dev,libxi-dev,libsdl1.2-dev,libosmesa6-dev,libxmu-dev
+Homepage: http://ecto.willowgarage.com/recognition
+Standards-Version: 3.9.2
+
+Package: ros-fuerte-object-recognition-renderer
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libfreeimage-dev,freeglut3-dev,libdevil-dev,ros-fuerte-opencv2,libassimp-dev,libxi-dev,libsdl1.2-dev,libosmesa6-dev,libxmu-dev
+Description: Code that generates random views of an object
