@@ -1,6 +1,6 @@
 <stack>
   <name>object_recognition_renderer</name>
-  <version>0.1.4</version>
+  <version>0.1.5</version>
   <description>Code that generates random views of an object</description>
   <author email="vrabaud@willowgarage.com">Vincent Rabaud</author>
   <maintainer email="vrabaud@willowgarage.com">Vincent Rabaud</maintainer>
@@ -14,7 +14,7 @@
   <build_depends>eigen</build_depends>
   <build_depends>freeimage</build_depends>
   <build_depends>glut</build_depends>
-  <build_depends>libosmesa6-dev<build_depends>
+  <build_depends>libosmesa6-dev</build_depends>
   <build_depends>libxi-dev</build_depends>
   <build_depends>libxmu-dev</build_depends>
   <build_depends>opencv2</build_depends>
