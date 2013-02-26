@@ -38,9 +38,13 @@
 
 #include <string>
 
+#include <eigen3/Eigen/Eigen>
+
 #include <opencv2/core/core.hpp>
 
 #include <GL/gl.h>
+
+using Eigen::Matrix4d;
 
 /** Function that normalizes a vector
  * @param x the x component of the vector
@@ -115,6 +119,7 @@ protected:
   double focal_length_x_, focal_length_y_, near_, far_;
   float angle_;
 
+  Matrix4d matrix_;
   Model* model_;
   GLuint scene_list_;
 
@@ -184,7 +189,7 @@ private:
   /** The index of the view point we are at now */
   size_t index_;
   /** The renderer object containing the scene and that will render images */
-  Renderer* renderer_;
+  cv::Ptr<Renderer> renderer_;
   /** Values for the angle sampling in degrees */
   int angle_min_, angle_max_, angle_step_, angle_;
   /** Values for the scale sampling */
