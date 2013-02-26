@@ -33,12 +33,13 @@
  *
  */
 
-#include "renderer_glut.h"
+#define GL_GLEXT_PROTOTYPES
 
-#include <iostream>
-#include <stdlib.h>
-
+#include <GL/gl.h>
+#include <GL/glu.h>
 #include <GL/glut.h>
+
+#include <object_recognition_renderer/renderer_glut.h>
 
 void
 RendererGlut::clean_buffers()
