@@ -35,6 +35,11 @@
 
 #include <object_recognition_renderer/renderer_osmesa.h>
 
+#include <iostream>
+#include <stdlib.h>
+
+#include <GL/glut.h>
+
 /**
  * @param file_path the path of the mesh file
  */
