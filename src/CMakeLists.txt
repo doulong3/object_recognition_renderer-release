@@ -1,7 +1,5 @@
 FIND_PACKAGE(OpenGL)
 
-set(DO_GLUT False)
-
 find_package(PkgConfig REQUIRED)
 find_package(ASSIMP QUIET)
 if (NOT ASSIMP_FOUND)
@@ -26,7 +24,6 @@ else()
   aux_source_directory(./assimp/contrib/zlib EXTRA_SOURCES_zlib)
   aux_source_directory(./assimp/code EXTRA_SOURCES)
   set(EXTRA_SOURCES ${EXTRA_SOURCES} ${EXTRA_SOURCES_clipper} ${EXTRA_SOURCES_ConvertUTF} ${EXTRA_SOURCES_irrXML} ${EXTRA_SOURCES_poly2tri} ${EXTRA_SOURCES_poly2tri_sweep} ${EXTRA_SOURCES_unzip} ${EXTRA_SOURCES_zlib})
-  message(INFO ${EXTRA_SOURCES})
   set(EXTRA_LIBRARIES)
 endif()
 
@@ -35,13 +32,15 @@ include_directories(BEFORE ${ASSIMP_INCLUDE_DIRS})
 
 find_package(OpenCV REQUIRED)
 
-INCLUDE_DIRECTORIES(SYSTEM ${GLUT_INCLUDE_DIR}
-                           ${OpenCV_INCLUDE_DIR}
+INCLUDE_DIRECTORIES(SYSTEM ${OpenCV_INCLUDE_DIR}
                            ${OPENGL_INCLUDE_DIR}
 )
 
-if (${DO_GLUT})
+if (${USE_GLUT})
   add_definitions(-DUSE_RENDERER_GLUT=1)
+
+  find_package(GLUT)
+  include_directories(SYSTEM ${GLUT_INCLUDE_DIR})
 
   # add a glut version of the renderer
   add_library(${PROJECT_NAME}_glut model.cpp
@@ -55,6 +54,15 @@ if (${DO_GLUT})
                                              ${GLUT_LIBRARIES}
                                              freeimage
   )
+  if (ROS_GROOVY_FOUND)
+  install(TARGETS ${PROJECT_NAME}_glut
+          DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  )
+  else()
+  install(TARGETS ${PROJECT_NAME}_glut
+          DESTINATION lib
+  )
+  endif()
 else()
   # add an OSMesa version of the renderer
   add_library(${PROJECT_NAME}_osmesa model.cpp
@@ -68,6 +76,15 @@ else()
                                                OSMesa GLU
                                                freeimage
   )
+  if (ROS_GROOVY_FOUND)
+  install(TARGETS ${PROJECT_NAME}_osmesa
+          DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  )
+  else()
+  install(TARGETS ${PROJECT_NAME}_osmesa
+          DESTINATION lib
+  )
+  endif()
 endif()
 
 ADD_EXECUTABLE(view_generator main.cpp)
@@ -76,7 +93,7 @@ SET_PROPERTY(TARGET view_generator PROPERTY DEBUG_POSTFIX ${ASSIMP_DEBUG_POSTFIX
 
 TARGET_LINK_LIBRARIES(view_generator ${EXTRA_LIBRARIES})
 
-if (${DO_GLUT})
+if (${USE_GLUT})
   target_link_libraries(view_generator ${PROJECT_NAME}_glut)
 else()
   target_link_libraries(view_generator ${PROJECT_NAME}_osmesa)
@@ -85,3 +102,13 @@ endif()
 SET_TARGET_PROPERTIES(view_generator PROPERTIES
                                      OUTPUT_NAME view_generator
 )
+
+if (ROS_GROOVY_FOUND)
+install(TARGETS view_generator
+        DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
+else()
+install(TARGETS view_generator
+        DESTINATION bin
+)
+endif()
