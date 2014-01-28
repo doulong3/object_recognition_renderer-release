@@ -35,17 +35,12 @@
 
 #include <object_recognition_renderer/renderer_osmesa.h>
 
-#include <iostream>
-#include <stdlib.h>
-
-#include <GL/glut.h>
-
 /**
  * @param file_path the path of the mesh file
  */
 RendererOSMesa::RendererOSMesa(const std::string & mesh_path)
     :
-      Renderer(mesh_path),
+      Renderer3d(mesh_path),
       ctx_(0),
       ctx_buffer_(0)
 {
