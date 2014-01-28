@@ -3,7 +3,6 @@
  *
  *  Copyright (c) 2012, Willow Garage, Inc.
  *  Copyright (c) 2013, Vincent Rabaud
- *  Copyright (c) 2013, Aldebaran Robotics
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
@@ -35,48 +34,55 @@
  *
  */
 
-#ifndef ORK_RENDERER_RENDERER_H_
-#define ORK_RENDERER_RENDERER_H_
+#ifndef ORK_RENDERER_RENDERER_GLUT_H_
+#define ORK_RENDERER_RENDERER_GLUT_H_
 
-#include <string>
+// Make sure we define that so that we have FBO enabled
+#define GL_GLEXT_PROTOTYPES
 
-#include <opencv2/core/core.hpp>
+#include "renderer3d.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-/** Base class to render a 3d or 2d scene under different view points
+/** Class that displays a scene in a Frame Buffer Object
+ * Inspired by http://www.songho.ca/opengl/gl_fbo.html
  */
-class Renderer
+class RendererGlut: public Renderer3d
 {
 public:
-  Renderer() {};
-
-  virtual
-  ~Renderer() {};
-
-  /** Similar to the gluLookAt function
-   * @param x the x position of the eye point
-   * @param y the y position of the eye point
-   * @param z the z position of the eye point
-   * @param upx the x direction of the up vector
-   * @param upy the y direction of the up vector
-   * @param upz the z direction of the up vector
+  /**
+   * @param file_path the path of the mesh file
    */
-  virtual void
-  lookAt(double x, double y, double z, double upx, double upy, double upz) = 0;
+  RendererGlut(const std::string & file_path)
+      :
+        Renderer3d(file_path),
+        is_glut_initialized_(false)
+  {
+  }
 
-  /** Renders the content of the current OpenGL buffers to images
-   * @param image_out the RGB image
-   * @param depth_out the depth image
-   * @param mask_out the mask image
-   */
-  virtual void
-  render(cv::Mat &image_out, cv::Mat &depth_out, cv::Mat &mask_out) const = 0;
+  ~RendererGlut()
+  {
+    clean_buffers();
+  }
 
-protected:
-  unsigned int width_, height_;
-  double focal_length_x_, focal_length_y_, near_, far_;
-  float angle_;
+private:
+  virtual void
+  clean_buffers();
+
+  virtual void
+  set_parameters_low_level();
+
+  virtual void
+  bind_buffers() const;
+
+  /** States whether GLUT has been initialized or not */
+  bool is_glut_initialized_;
+  /** The frame buffer object used for offline rendering */
+  GLuint fbo_id_;
+  /** The render buffer object used for offline depth rendering */
+  GLuint rbo_id_;
+  /** The render buffer object used for offline image rendering */
+  GLuint texture_id_;
 };
 
-#endif /* ORK_RENDERER_RENDERER_H_ */
+#endif /* ORK_RENDERER_RENDERER_GLUT_H_ */

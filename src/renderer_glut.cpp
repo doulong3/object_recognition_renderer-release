@@ -33,12 +33,13 @@
  *
  */
 
-#include "renderer_glut.h"
+#define GL_GLEXT_PROTOTYPES
 
-#include <iostream>
-#include <stdlib.h>
-
+#include <GL/gl.h>
+#include <GL/glu.h>
 #include <GL/glut.h>
+
+#include <object_recognition_renderer/renderer_glut.h>
 
 void
 RendererGlut::clean_buffers()
@@ -62,11 +63,16 @@ RendererGlut::set_parameters_low_level()
   int argc = 0;
   char **argv = 0;
 
-  // Create an OpenGL context
-  glutInit(&argc, argv);
+  // Start GLUT if it was not started before
+  //if (glutGet(GLUT_ELAPSED_TIME) <= 0)
+  if (!is_glut_initialized_) {
+    is_glut_initialized_ = true;
+    glutInit(&argc, argv);
+  }
+
   // By doing so, the window is not open
   glutInitDisplayMode(GLUT_DOUBLE);
-  glutCreateWindow("Assimp - Very simple OpenGL sample");
+  glutCreateWindow("Assimp renderer");
 
   // create a framebuffer object
   glGenFramebuffers(1, &fbo_id_);
