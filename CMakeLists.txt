@@ -14,21 +14,14 @@ set(${PROJECT_NAME}_include_files ${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}/
 else()
 set(${PROJECT_NAME}_export_libs ${PROJECT_NAME}_osmesa)
 set(${PROJECT_NAME}_include_files ${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}/renderer_osmesa.h)
+set(CATKIN_PACKAGE_BIN_DESTINATION share/${PROJECT_NAME}/bin)
+set(CATKIN_PACKAGE_LIB_DESTINATION lib)
 endif()
 
-if (${catkin_VERSION} VERSION_GREATER "0.5.28")
 catkin_package(INCLUDE_DIRS include
                DEPENDS Boost
                LIBRARIES ${${PROJECT_NAME}_export_libs}
 )
-else()
-catkin_stack()
-catkin_project(object_recognition_renderer INCLUDE_DIRS include
-                                           LIBRARIES ${${PROJECT_NAME}_export_libs}
-)
-
-set(CATKIN_PACKAGE_INCLUDE_DESTINATION include/${PROJECT_NAME})
-endif()
 
 include_directories(include)
 include_directories(SYSTEM ${Boost_INCLUDE_DIRS}
@@ -40,6 +33,14 @@ add_subdirectory(src)
 
 # install the include folder
 install(FILES ${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}/renderer.h
-                ${${PROJECT_NAME}_include_files}
-        DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}/
+              ${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}/renderer2d.h
+              ${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}/renderer3d.h
+              ${PROJECT_SOURCE_DIR}/include/${PROJECT_NAME}/utils.h
+              ${${PROJECT_NAME}_include_files}
+  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}/
 )
+
+# add docs
+if (COMMAND ecto_sphinx)
+ecto_sphinx(${CMAKE_CURRENT_SOURCE_DIR}/doc/ doc)
+endif()
