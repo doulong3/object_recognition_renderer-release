@@ -2,6 +2,7 @@
  * Software License Agreement (BSD License)
  *
  *  Copyright (c) 2012, Willow Garage, Inc.
+ *  Copyright (c) 2013, Vincent Rabaud
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
@@ -33,52 +34,80 @@
  *
  */
 
-#ifndef RENDERER_GLUT_H_
-#define RENDERER_GLUT_H_
+#ifndef ORK_RENDERER_RENDERER3D_H_
+#define ORK_RENDERER_RENDERER3D_H_
 
-// Make sure we define that so that we have FBO enabled
-#define GL_GLEXT_PROTOTYPES
+#include <string>
 
-#include <object_recognition_renderer/renderer.h>
+#include <opencv2/core/core.hpp>
+
+#include <GL/gl.h>
+
+#include "renderer.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+class Model;
+class aiLogStream;
 
 /** Class that displays a scene in a Frame Buffer Object
  * Inspired by http://www.songho.ca/opengl/gl_fbo.html
  */
-class RendererGlut: public Renderer
+class Renderer3d : public Renderer
 {
 public:
   /**
    * @param file_path the path of the mesh file
    */
-  RendererGlut(const std::string & file_path)
-      :
-        Renderer(file_path)
-  {
-  }
+  Renderer3d(const std::string & file_path);
 
-  ~RendererGlut()
-  {
-    clean_buffers();
-  }
+  virtual
+  ~Renderer3d();
 
-private:
+  void
+  set_parameters(size_t width, size_t height, double focal_length_x, double focal_length_y, double near, double far);
+
+  /** Similar to the gluLookAt function
+   * @param x the x position of the eye pointt
+   * @param y the y position of the eye point
+   * @param z the z position of the eye point
+   * @param upx the x direction of the up vector
+   * @param upy the y direction of the up vector
+   * @param upz the z direction of the up vector
+   */
+  void
+  lookAt(GLdouble x, GLdouble y, GLdouble z, GLdouble upx, GLdouble upy, GLdouble upz);
+
+  /** Renders the content of the current OpenGL buffers to images
+   * @param image_out the RGB image
+   * @param depth_out the depth image
+   * @param mask_out the mask image
+   */
+  void
+  render(cv::Mat &image_out, cv::Mat &depth_out, cv::Mat &mask_out) const;
+
+protected:
   virtual void
-  clean_buffers();
+  clean_buffers() = 0;
 
   virtual void
-  set_parameters_low_level();
+  set_parameters_low_level() = 0;
 
   virtual void
-  bind_buffers() const;
+  bind_buffers() const = 0;
 
-  /** The frame buffer object used for offline rendering */
-  GLuint fbo_id_;
-  /** The render buffer object used for offline depth rendering */
-  GLuint rbo_id_;
-  /** The render buffer object used for offline image rendering */
-  GLuint texture_id_;
+  /** Path of the mesh */
+  std::string mesh_path_;
+
+  unsigned int width_, height_;
+  double focal_length_x_, focal_length_y_, near_, far_;
+  float angle_;
+
+  Model* model_;
+  GLuint scene_list_;
+
+  /** stream for storing the logs from Assimp */
+  aiLogStream* ai_stream_;
 };
 
-#endif /* RENDERER_GLUT_H_ */
+#endif /* ORK_RENDERER_RENDERER3D_H_ */
