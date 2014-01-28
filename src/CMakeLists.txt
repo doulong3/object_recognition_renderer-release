@@ -27,6 +27,15 @@ else()
   set(EXTRA_LIBRARIES)
 endif()
 
+# create the 2d rendering library
+add_library(${PROJECT_NAME}_2d renderer2d.cpp)
+target_link_libraries(${PROJECT_NAME}_2d ${OpenCV_LIBRARIES})
+install(TARGETS ${PROJECT_NAME}_2d
+          DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+)
+
+# create the 3d rendering library
+set(SOURCES model.cpp renderer3d.cpp utils.cpp)
 
 include_directories(BEFORE ${ASSIMP_INCLUDE_DIRS})
 
@@ -43,8 +52,7 @@ if (${USE_GLUT})
   include_directories(SYSTEM ${GLUT_INCLUDE_DIR})
 
   # add a glut version of the renderer
-  add_library(${PROJECT_NAME}_glut model.cpp
-                                   renderer.cpp
+  add_library(${PROJECT_NAME}_glut ${SOURCES}
                                    renderer_glut.cpp
                                    ${EXTRA_SOURCES}
   )
@@ -54,19 +62,12 @@ if (${USE_GLUT})
                                              ${GLUT_LIBRARIES}
                                              freeimage
   )
-  if (ROS_GROOVY_FOUND)
   install(TARGETS ${PROJECT_NAME}_glut
           DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   )
-  else()
-  install(TARGETS ${PROJECT_NAME}_glut
-          DESTINATION lib
-  )
-  endif()
 else()
   # add an OSMesa version of the renderer
-  add_library(${PROJECT_NAME}_osmesa model.cpp
-                                     renderer.cpp
+  add_library(${PROJECT_NAME}_osmesa ${SOURCES}
                                      renderer_osmesa.cpp
                                      ${EXTRA_SOURCES}
   )
@@ -76,17 +77,12 @@ else()
                                                OSMesa GLU
                                                freeimage
   )
-  if (ROS_GROOVY_FOUND)
   install(TARGETS ${PROJECT_NAME}_osmesa
           DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   )
-  else()
-  install(TARGETS ${PROJECT_NAME}_osmesa
-          DESTINATION lib
-  )
-  endif()
 endif()
 
+# add an executable to render views to a file
 ADD_EXECUTABLE(view_generator main.cpp)
 
 SET_PROPERTY(TARGET view_generator PROPERTY DEBUG_POSTFIX ${ASSIMP_DEBUG_POSTFIX})
@@ -98,17 +94,15 @@ if (${USE_GLUT})
 else()
   target_link_libraries(view_generator ${PROJECT_NAME}_osmesa)
 endif()
+target_link_libraries(view_generator ${PROJECT_NAME}_2d)
 
 SET_TARGET_PROPERTIES(view_generator PROPERTIES
                                      OUTPUT_NAME view_generator
 )
 
-if (ROS_GROOVY_FOUND)
 install(TARGETS view_generator
         DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
-else()
-install(TARGETS view_generator
-        DESTINATION bin
-)
-endif()
+
+# add some executables
+add_subdirectory(apps)
