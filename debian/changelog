@@ -1,8 +1,0 @@
-ros-hydro-object-recognition-renderer (0.2.0-0precise) precise; urgency=high
-
-  * get a 2d (planar) and a 3d (mesh) renderer
-  * drop Fuerte support
-
- -- Vincent Rabaud <vincent.rabaud@gmail.com>  Tue, 14 Jan 2014 20:23:06 +0100
-
-
