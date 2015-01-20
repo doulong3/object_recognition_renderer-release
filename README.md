@@ -1,3 +1,24 @@
+## object_recognition_renderer (hydro) - 0.2.2-0
+
+The packages in the `object_recognition_renderer` repository were released into the `hydro` distro by running `/usr/bin/bloom-release object_recognition_renderer -t hydro -r hydro` on `Tue, 20 Jan 2015 21:10:00 -0000`
+
+The `object_recognition_renderer` package was released.
+
+Version of package(s) in repository `object_recognition_renderer`:
+- upstream repository: https://github.com/wg-perception/ork_renderer.git
+- release repository: https://github.com/ros-gbp/object_recognition_renderer-release.git
+- rosdistro version: `0.2.1-0`
+- old version: `0.2.1-0`
+- new version: `0.2.2-0`
+
+Versions of tools used:
+- bloom version: `0.5.16`
+- catkin_pkg version: `0.2.6`
+- rosdep version: `0.11.0`
+- rosdistro version: `0.4.0`
+- vcstools version: `0.1.36`
+
+
 ## object_recognition_renderer (jade) - 0.2.1-0
 
 The packages in the `object_recognition_renderer` repository were released into the `jade` distro by running `/usr/bin/bloom-release object_recognition_renderer -r jade -t jade --edit` on `Sun, 18 Jan 2015 19:15:11 -0000`
